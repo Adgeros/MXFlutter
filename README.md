@@ -1,46 +1,68 @@
-# MXFlutter技术预览版
+![](https://raw.githubusercontent.com/mxflutter/mxflutter/master/mxflutter/mxflutterlogo.png)
+----
+![Pub Version (including pre-releases)](https://img.shields.io/pub/v/mxflutter?include_prereleases) [![GitHub license](https://img.shields.io/github/license/mxflutter/mxflutter)](https://github.com/mxflutter/mxflutter/blob/master/LICENSE) [![GitHub stars](https://img.shields.io/github/stars/mxflutter/mxflutter?style=social)](https://github.com/mxflutter/mxflutter/stargazers)
+
+
+# MXFlutter Beta
 
 [中文版文档](README.md)|[English Document](Documentation/README-EN.md)
+
+
+## 新版本
+
+### 【*New】0.2.1 Beta   2020-05-07
+
+   mxflutter 重构为标准 package，简化接入步骤，三步接入到现有工程运行起JS编写的页面，欢迎大家尝鲜。
+体验包下载地址 [MXFlutter_v0-1-2.apk](https://github.com/TGIF-iMatrix/MXFlutter/releases/download/v0.1.2-beta/MXFlutter_v0-1-2.apk)
+
+  *   库代码移动到 ./mxflutter ，接入使用 package 的标准方式
+  *   接入示例 mxflutter/example，[接入指南文档](https://github.com/mxflutter/mxflutter/tree/master/mxflutter) 
+  *   对应Flutter 1.17.0 (Channel stable tag:v1.17.0) 
+  *   支持Packages
+      1.   dio
+      2.   pull_to_refresh
+      3.   cached_network_image
+      4.   shared_preferences
+  *   支持MessageChannel
+  *   性能和稳定性优化，Bug Fix
+
+ 
+``` 
+运行 MXFlutter
+  如果本机是 Flutter Channel stable，请更新到最新 tag:v1.17.0
+  如果遇到其他问题，可在QQ群（747535761）中讨论。
+```
+
+----
+
+预告：（0.3.0）版本预计5月11日发布
 
 ----
 
 *  [一、项目介绍](#title1)
-*  [二、兼容版本](#title2)
-*  [三、项目特性](#title3)
-*  [四、核心思想](#title4)
-*  [五、项目架构](#title5)
-    * [1.VM层](#title5_1)
-    * [2.Flutter层](#title5_2)
-    * [3.Native层](#title5_3)
-*  [六、MXFlutter基本使用](#title6)
-    * [1.Flutter侧，创建并启动MXJSFlutterApp](#title6_1)
-    * [2.JS侧，编写MXJSWidget页面](#title6_2)
-    * [3.Flutter侧，进入MXJSWidget页面](#title6_3)
-*  [七、项目效果UI展示](#title7)
-*  [八、许可协议](#title8)
-*  [九、参与贡献](#title9)
-*  [十、团队介绍](#title10)
-*  [十一、联系我们](#title11)
+*  [二、项目特性](#title2)
+*  [三、核心思想](#title3)
+*  [四、项目架构](#title4)
+    * [1.VM层](#title4_1)
+    * [2.Flutter层](#title4_2)
+    * [3.Native层](#title4_3)
+*  [五、MXFlutter基本使用](#title5)
+    * [三步接入MXFlutter](#title5_1)
+*  [六、项目效果UI展示](#title6)
+*  [七、许可协议](#title7)
+*  [八、参与贡献](#title8)
+*  [九、团队介绍](#title9)
+*  [十、联系我们](#title10)
 
 ----
 
 ##  <a name="title1">一、项目介绍</a>
 
-MXFlutter是一套基于JS的高性能Flutter动态化框架，它用极类似Dart的开发方式，通过编写JavaScript代码，来开发Flutter应用。更多细节在 [基于JS的高性能Flutter动态化框架详细介绍](Documentation/基于JS的高性能动态化框架详细介绍.md)。
+MXFlutter是一套基于JavaScript的Flutter框架，它用极类似Dart的开发方式，通过编写JavaScript代码，来开发Flutter应用。更多细节在 [基于JavaScript的Flutter框架详细介绍](Documentation/基于JS的高性能动态化框架详细介绍.md)。
 
 ----
 
-## <a name="title2">二、兼容版本</a>
-
-MXFlutter基于 Flutter 1.5.4研发，你可以在项目中使用Flutter1.5.4 或以下版本，如果遇到高笨笨，可能会有兼容性问题。 MXFlutter会尽快支持Flutter 1.7.8，如果你有更好的想法，欢迎提issue或者pull request。
-
-附Flutter1.5.4下载地址：
-
-[https://storage.googleapis.com/flutter_infra/releases/stable/macos/flutter_macos_v1.5.4-hotfix.2-stable.zip](https://storage.googleapis.com/flutter_infra/releases/stable/macos/flutter_macos_v1.5.4-hotfix.2-stable.zip)
-
-----
-
-## <a name="title3">三、项目特性</a>
+## <a name="title2">二、项目特性</a>
 
 * 支持Dart Flutter语法
 * 支持定义Flutter中同名Widget类
@@ -51,34 +73,34 @@ MXFlutter基于 Flutter 1.5.4研发，你可以在项目中使用Flutter1.5.4 �
 
 ----
 
-## <a name="title4">四、核心思想</a>
+## <a name="title3">三、核心思想</a>
 
 把 Flutter 的渲染逻辑中的三棵树（即：WidgetTree、Element、RenderObject ）中的第一棵（即：WidgetTree），放到 JavaScript 中生成。用 JavaScript 完整实现了 Flutter 控件层封装，可以使用 JavaScript，用极其类似 Dart 的开发方式，开发Flutter应用，利用JavaScript版的轻量级Flutter Runtime，生成UI描述，传递给Dart层的UI引擎，UI引擎把UI描述生产真正的 Flutter 控件。所以，它在iOS上是完全动态化的。
 
-关于MXFlutter动态化框架渲染、优化等更多详细细节介绍，请看文档：[基于JS的高性能Flutter动态化框架详细介绍](Documentation/基于JS的高性能动态化框架详细介绍)。
+关于MXFlutter动态化框架渲染、优化等更多详细细节介绍，请看文档：[基于JavaScript的Flutter框架详细介绍](Documentation/基于JS的高性能动态化框架详细介绍.md)。
 
 ----
 
-## <a name="title5">五、项目结构</a>
+## <a name="title4">四、项目结构</a>
 
 MXFlutter，就是用JavaScript，以Flutter的写法开发Flutter。具体的项目结构分为三层，请看下图：
 
 ![](https://github.com/TGIF-lucaliu/Image/blob/master/16b8cec2d34ded87.jpeg?raw=true)
 
-#### <a name="title5_1">1.VM层：</a>
+#### <a name="title4_1">1.VM层：</a>
 
 * MXFlutter Runtime
 * 定义和Flutter Widget同名镜像类
 * 响应式UI框架
 
-#### <a name="title5_2">2.Flutter层：</a>
+#### <a name="title4_2">2.Flutter层：</a>
 
 * Script脚本管理模块
 * DSL2Widget UIEngine，事件支持
 * Dart业务API支持
 * 内存管理，对象生命周期管理
 
-#### <a name="title5_3">3.Native层：</a>
+#### <a name="title4_3">3.Native层：</a>
 
 * VM虚拟机
 * 线程管理
@@ -86,47 +108,101 @@ MXFlutter，就是用JavaScript，以Flutter的写法开发Flutter。具体的�
 
 ----
 
-## <a name="title6">六、MXFlutter基本使用</a>
+## <a name="title5">五、MXFlutter基本使用</a>
 
-#### <a name="title6_1">1. Flutter侧，创建并启动MXJSFlutterApp</a>
+mxflutter 是一个标准的 Dart package，可以按照 Dart 引入 package 的方式接入，步骤非常简单。在开始接入之前，运行体验 mxfltuter 的两个例子，对接入会有帮助，一个是示例丰富但比较复杂的例子，在 https://github.com/mxflutter/mxflutter.git 主库根目录，一个是最简化接入示例，在主库 mxflutter/example/ 目录下 ，推荐第一次接入按照第二个例子来。
 
-```Dart
-MXJSFlutter.getInstance().setup();
-MXJSFlutter.getInstance().runJSApp(jsAppName: "app_test", pageName: null);
+### <a name="title5_1">三步接入MXFlutter
+
+#### 1. 添加依赖
+
+```
+dependencies:
+  mxflutter: ^0.2.0+1
 ```
 
-#### <a name="title6_2">2. JS侧，编写MXJSWidget页面</a>
+因为mxflutter在快速迭代，推荐 fork 在 github 的主库 https://github.com/mxflutter/mxflutter.git 来接入，方面自己修改和定期从主库的更新。
 
-```JavaScript
-class AppTest extends MXJSFlutterApp {
-    constructor() {
-        super("app_test", "initRouteName");
-    }
+```
+  dependencies:
+    mxflutter:
+      git:
+        url: https://github.com/mxflutter/mxflutter.git
+        path: mxflutter/
 
-    createJSWidgetWithName(pageName) {
-        let w = new JSWidgetHomePage;
-        return w;
-    }
+```
+
+#### 2. 拷贝示例JS代码文件，配置JS代码资源引入
+
+第一步拷贝JS代码文件：mxflutter 主库提供了JS代码模版，拷贝主库 mxflutter/example/mxflutter_js_src (https://github.com/mxflutter/mxflutter/tree/master/mxflutter/example/mxflutter_js_src) 文件夹到你的工程目录，和pubspec.yaml文件同级。
+
+
+第二步在 pubspec.yaml 文件中引入 mxflutter_js_src 代码资源文件夹
+
+
+```
+ flutter:
+   assets:
+     - mxflutter_js_src/
+
+```
+
+*特别注意：第一步拷贝的文件夹和第二步导入的资源是配套的，因为 pubspec.yaml 导入资源时，不会自动导入子文件夹， 如果你是拷贝的主库根目录 https://github.com/mxflutter/mxflutter/tree/master/mxflutter_js_src 文件夹，要配套按照主库 pubspec.yaml 的资源配置来引入，学习接入建议使用 mxflutter/example/mxflutter_js_src 的示例*
+
+完成后目录结构应该是这样的
+
+```
+my_flutter/
+├── lib/
+│   └── main.dart
+└── pubspec.yaml
+└── mxflutter_js_src/
+│   └── main.js
+│   └── home_page.js
+│   └── js_dev_demo.js
+│   └── mxjsbuilder_demo.js
+```
+
+#### 3. 在Flutter代码中，运行MXFlutter，打开由JS编写的页面
+
+在 main.dart 文件中，调用 runJSApp 启动JSApp，runJSApp 函数如果不传任何参数，默认会运行 mxflutter_js_src/mian.js 文件
+
+
+```
+//mxflutter
+import 'package:mxflutter/mxflutter.dart';
+
+void main() {
+  //-------1. MXFlutter 启动---------
+  MXJSFlutter.getInstance().runJSApp();
+  runApp(MyApp());
 }
 
-function main(pageName) {
-
-    MXJSLog.log("main:pageName" + pageName);
-
-    let app = new AppTest;
-    runApp(app);
-}
 ```
 
-#### <a name="title6_3">3.Flutter侧，进入MXJSWidget页面</a>
+在合适时机，比如用户点击界面时，打开JS页面。
 
-```Dart
-Navigator.push(context, MaterialPageRoute(builder: (context) => MXJSFlutter.getInstance().navigatorPushWithPageName("JSWidgetHomePage")));
+
+
 ```
+  onTap: () {
+                //-------2. MXFlutter push 一个使用MXFlutter框架编写的页面
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => MXJSPageWidget(
+                            jsWidgetName: "MXJSWidgetHomePage")));
+              }
+
+```
+
+上面代码 MXJSPageWidget 的参数 jsWidgetName: "MXJSWidgetHomePage",在mxflutter_js_src/main.js  MyApp::createJSWidgetWithName 函数中使用，用来标示打开哪个JS页面。
+
+##### bingo 如果顺利的话，基本得接入工作已经完成，你应该可以打开一个经典的 Flutter 示例页面了。接下来可以尝试修改下 mxflutter_js_src/ 文件夹下的JS文件，可以看到 UI 变化。
 
 ----
 
-## <a name="title7">七、项目效果UI展示</a>
+## <a name="title6">六、项目效果UI展示</a>
 
 先看看使用效果，以下截图是在MXFlutter框架下用JS开发，大家可以把上面的源码下载下来，里面有完整的JS代码示例：
 
@@ -136,7 +212,7 @@ Navigator.push(context, MaterialPageRoute(builder: (context) => MXJSFlutter.getI
 
 ![](https://github.com/langbluesky/Image/blob/master/pesto_demo.jpeg?raw=true)
 
-下面是UI截图对应的JS代码，没错，你没有眼花，这个是真的 JavaScript 代码，可以在 MXFlutter 的运行时库上渲染出 Flutter 的UI，简直是太厉害了（是不是很像Flutter里面的组件代码）！
+下面是UI截图对应的JS代码，没错，你没有眼花，这个是真的 JavaScript 代码，可以在 MXFlutter 的运行时库上渲染出 Flutter 的UI，（是不是很像Flutter里面的组件代码）！
 
 ```javascript
 class JSPestoPage extends MXJSWidget {
@@ -159,9 +235,9 @@ class JSPestoPage extends MXJSWidget {
       }),
       floatingActionButton: new FloatingActionButton({
         child: new Icon(new IconData(0xe3c9)),
-        onPressed: this.createCallbackID(function () {
+        onPressed: function () {
 
-        }),
+        },
       }),
       body: new CustomScrollView({
         semanticChildCount: this.recipes.length,
@@ -184,9 +260,9 @@ class JSPestoPage extends MXJSWidget {
         IconButton({
           icon: new Icon(new IconData(1)),
           tooltip: 'Search',
-          onPressed: this.createCallbackID(function () {
+          onPressed: function () {
 
-          }),
+          },
         }),
       ],
       flexibleSpace: LayoutBuilder({
@@ -253,7 +329,8 @@ class JSPestoPage extends MXJSWidget {
 > 项目演示
 
 源码中还有更丰满的示例，高仿知乎页面JSFlutter版，可以点此进入查看代码：
-[https://github.com/TGIF-iMatrix/MXFlutter/blob/master/js_flutter_src/app_test/zhihu/home/home_page.js](https://github.com/TGIF-iMatrix/MXFlutter/blob/master/js_flutter_src/app_test/zhihu/home/home_page.js)
+
+[zhihu/home/home_page.js](https://github.com/TGIF-iMatrix/MXFlutter/blob/master/mxflutter_js_src/mxflutter_app_demo/app_demo/zhihu/home/home_page.js)
 
 下图是对应的UI，已经接近在线上版直接使用了：
 
@@ -263,43 +340,63 @@ class JSPestoPage extends MXJSWidget {
 
 ----
 
-## <a name="title8">八、许可协议</a>
+## <a name="title7">七、许可协议</a>
 
 MXFlutter遵循[MIT](http://opensource.org/licenses/MIT)开源许可证协议。
 
 ----
 
-## <a name="title9">九、参与贡献</a>
+## <a name="title8">八、参与贡献</a>
 
 MXFlutter还需要很多工作去完善功能，修改BUG，建设配套设施，如果大家有兴趣，欢迎加入一起开发。
 如果你有好的意见或建议，也欢迎给我们提 `Issues` 或 `Pull Requests`。
 
+特别感谢以下开发者的贡献
+
+![](https://avatars1.githubusercontent.com/u/1397062?s=60&v=4) [colin3dmax](https://github.com/colin3dmax)
+ 
+![](https://avatars1.githubusercontent.com/u/14990734?s=60&v=4) [yuxizhe](https://github.com/yuxizhe)
+ 
+![](https://avatars1.githubusercontent.com/u/26341415?s=60&v=4) [Johnny](https://github.com/chenzhengxu)
+ 
+[AiNiBaBa](https://github.com/AiNiBaBa)
+ 
 ----
 
-## <a name="title10">十、团队介绍</a>
+## <a name="title9">九、团队介绍</a>
 
 > 成员
 
-项目成员luca浪哥，nice，yockie帅哥贡献了动画，控件，示例APP等核心实现， chaodong老师负责了DartVM方案，IP老师帮忙提供了单元测试，健身大神yofer老师负责了代码维护，工具建设。 
+项目成员luca浪哥，nice，yockie帅哥贡献了动画，控件，示例APP等核心实现， chaodong老师负责了DartVM方案，wenn和不咸同学负责了Android平台的实现，IP老师提供了单元测试，健身大神yofer老师负责了代码维护，工具建设。 
 
 > 项目由来
 
-18年10月份，团队尝试使用 Flutter，做为iOS开发，一接触到Flutter就马上感受到，Flutter 虽然强大，但不能像RN一样动态化是阻碍我们使用她的唯一障碍了。看Google团队对动态化的计划，短期内应该不会上线，所以撸起袖子自己动手，启动了这个技术探索项目。
+18年10月份，团队开始引入 Flutter，Flutter 功能强大，开发快捷，但不能像ReactNative一样使用JavaScript语言开发，为了扩展Flutter的开发者阵营，所以启动了这个技术探索项目。
 
 > 现状
 
-MXFlutter虽然各个模块已相对完整，但投入生产还需要解决其中的BUG，由于19年初，小组启动新项目，非常繁忙，几乎没有时间继续开发，从3月份一直暂停，目前人力仍然很紧张，如果大家有兴趣，期待小伙伴们一起加入，共同丰富 MXFlutter 动态化能力。
+要实现JS开发Flutter是一个很大的工程，团队成员平时工作也非常繁忙，只能业余时间投入，所以人力情况非常紧张，如果大家有兴趣，期待小伙伴们一起加入，共同建设 MXFlutter ，各自为战，不如一起做一个完善的。
 
-由于时间紧张，MXFlutter还有很多遗留的问题，作为一个技术探索，非常辛苦但非常有趣，期待各位大牛指导，期待小伙伴们提出问题一起讨论解决。
+由于项目代码量大，时间紧张，MXFlutter还有很多遗留的问题，作为一个技术探索，非常辛苦但非常有趣，期待各位大牛指导，期待小伙伴们提出问题一起讨论解决。
 
 要了解全部，一定要拉下源码，运行起来看看，有问题可以留言一讨论，MXFlutter会持续更新。
 
 ----
 
-## <a name="title11">十一、联系我们</a>
+## <a name="title10">十、联系我们</a>
 
-`TGIF-iMatrix` 是一个技术氛围浓厚，有美女有帅哥有趣有爱的团队，还有精通量子计算，5G等前沿技术的数据分析victor老王，欢迎iOS，Android开发小伙伴，数据开发，数据分析岗位同学投递简历哦：imatrixteam@qq.com
+`MXFlutter Team` 是一个技术氛围浓厚，有美女有帅哥有趣有爱的团队，欢迎终端，后台，前端同学投递简历哦：mxflutter@qq.com
 
 对MXFlutter有兴趣的小伙伴，可以加群交流 QQ群:747535761
 
 ![qrcode](https://github.com/langbluesky/Image/blob/master/qrcode.png?raw=true)
+
+
+
+
+
+
+
+
+
+
