@@ -80,6 +80,9 @@ abstract class MXJSFlutter {
 
   ///flutter->js  顶层通用调用通道
   dynamic invokeJSCommonChannel(MethodCall jsMethodCall);
+
+  ///注册JS call dart Proxy
+  void registerMirrorObjProxy(Map<String, CreateJsonObjProxyFun> string2CreateJsonObjProxyFunMap);
 }
 
 typedef Future<dynamic> _MXChannelFun(dynamic arguments);
@@ -186,10 +189,18 @@ class MXJSFlutterLib implements MXJSFlutter {
           jsAppSearchPathWithAssetsKeyList;
     }
 
+    //清理flutter侧的对象映射
+    _clearMX();
+
     _jsFlutterMainChannel.invokeMethod("callNativeRunJSApp", args);
 
     //暂时只支持一个
     currentApp = MXJSFlutterApp(jsAppAssetsKey);
+  }
+
+  ///清理flutter侧的对象映射
+  _clearMX() {
+    MXJSMirrorObjMgr.getInstance().clearMirrorObjects();
   }
 
   callJsCallbackFunction(String callbackId, param) {
@@ -380,5 +391,10 @@ class MXJSFlutterLib implements MXJSFlutter {
 
   mxLog(String log) {
     _jsFlutterMainChannel?.invokeMethod("mxLog", log);
+  }
+
+  void registerMirrorObjProxy(Map<String, CreateJsonObjProxyFun> string2CreateJsonObjProxyFunMap) {
+    MXJsonObjToDartObject.getInstance()
+        .registerProxy(string2CreateJsonObjProxyFunMap);
   }
 }
